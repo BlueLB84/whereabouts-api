@@ -2,3 +2,10 @@ language: node_js
 node_js: node
 services:
    - mongodb
+provider: heroku
+api-key: 09be2cca-6581-4658-982f-71d17fb048b8
+app: serene-hollows-96736
+on:
+  repo: BlueLB84/whereabouts-api
+notifications:
+  email: false
