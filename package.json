@@ -4,7 +4,7 @@
   "description": "Whereabouts API",
   "main": "index.js",
   "scripts": {
-    "test": "mocha",
+    "test": "mocha --exit",
     "start": "node server.js"
   },
   "repository": {
