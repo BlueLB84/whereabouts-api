@@ -1,11 +1,13 @@
 language: node_js
 node_js: node
 services:
-   - mongodb
-provider: heroku
-api-key: 09be2cca-6581-4658-982f-71d17fb048b8
-app: serene-hollows-96736
-on:
-  repo: BlueLB84/whereabouts-api
+- mongodb
+deploy:
+  provider: heroku
+  api_key:
+    secure: KG5eSXunPWdpOfJmwtl6Ejrdf0x702xyHOyASTV02uOQSjJCZvVNprMdFNEHK+eu93i0a23szHbLTzf6pq6sC5SclE6fI6Ezm/MP9bEjuWzp+Xpv195pnqIUKHA8/sHrDKPYWEtqC0cEQTK/XRTikpEjX1ddgIxusjrTtlkShzHn3O1tlQ1+KS6lsOEcOVWh7kLB/FCZ97gYtrRWSH/SBhjYVQaymcgRgaH2CBdXrssfBl6qESsx7HFrJo/osSmHnzR52b4Q6j0gc95sPm5EVIJj8buGHIpUe/8cp+1bL/jimH11Z6IcGR6ZXWRBHfEtpb0X/IHdupuzMAl4DUhRzpTRwsINPew+K8rg1a++UwYFHl0+eI1USmJwwQ5uM+afWJnuAcckpIsAmFkye5AgYn4v33+SgJTh6m+VwOQFa7816c4XPeimS4qTbha7IIlstsAiHVLIS6s5MqUyNIpGFoxVNDr7tvx1PuvXDQ8AjJzmJMHmsM1dN9MorBPNunOj4C7nePGYhK8vPy359ghHJgcTzI9puluRxSq2JBw33QQSvcEbF63X462ruufTTk7d5BxJBw+CKQm35mmS9iXHf464da4cVJ/sfE+hDqUIEiBBVwSEZ5w2XBhmKtZjKhZ3fs+TXpQm/2CX/FCtBH5lXyJtLE4aY8npzb7C2cK1mJg=
+  app: serene-hollows-96736
+  on:
+    repo: BlueLB84/whereabouts-api
 notifications:
   email: false
