@@ -1,7 +1,6 @@
 const express = require('express');
 const cors = require('cors');
-const { CLIENT_ORIGIN } = require('./config');
-const PORT = process.env.PORT || 8080;
+const { CLIENT_ORIGIN, PORT } = require('./config');
 const app = express();
 
 app.use(
