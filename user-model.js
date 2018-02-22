@@ -20,7 +20,7 @@ const userSchema = mongoose.Schema({
 userSchema.methods.userApiRep = function() {
 	return {
 		userId: this._id,
-		usrname: this.username,
+		usrname: this.usrname,
 		firstName: this.firstName,
 		lastName: this.lastName,
 		imgSrc: this.imgSrc,
