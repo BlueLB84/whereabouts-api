@@ -119,7 +119,6 @@ describe('Users API resource', function() {
 				.post('/api/users')
 				.send(newUser)
 				.then(function(res) {
-					console.info(res.body);
 					res.should.have.status(201);
 					res.should.be.json;
 					res.body.should.be.a('object');
@@ -169,7 +168,7 @@ describe('Users API resource', function() {
 				return User.findById(updateData.userId);
 			})
 			.then(function(user) {
-				user.whereabouts.should.equal(updateData.whereabouts);
+				expect(user.whereabouts.toObject()).to.deep.equal(updateData.whereabouts);
 			});
 		});
 	});

@@ -22,15 +22,15 @@ module.exports = function(req, res) {
 	const toUpdate = {};
 	const updateableFields = ['imgSrc', 'whereabouts'];
 
-	updateableFields.map((field, index) => {
+	updateableFields.forEach(field => {
 		if (field in req.body) {
 			toUpdate[field] = req.body[field];
 		}
-	})
+	});
 	
-	
+	console.log(typeof(toUpdate));
 	User
-		.findByIdAndUpdate(req.params.userid, {$set: toUpdate, $push: {Users: req.body.userId}})
+		.findByIdAndUpdate(req.params.userid, toUpdate)
 		.then(user => res.status(204).end())
 		.catch(err => res.status(500).json({message: 'Internal server error'}));
 };
