@@ -1,10 +1,11 @@
+require('dotenv').config();
 const express = require('express');
 const morgan = require('morgan');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const jsonParser = bodyParser.json();
 const cors = require('cors');
-const { CLIENT_ORIGIN, PORT, DATABASE_URL } = require('./config');
+const { DATABASE_URL, CLIENT_ORIGIN, PORT,  } = require('./config');
 const app = express();
 
 const usersRouter = require('./routers/usersRouter');
@@ -30,6 +31,7 @@ app.get('/api/*', (req, res) => {
 let server;
 
 function runServer(databaseUrl=DATABASE_URL, port=PORT) {
+	console.log(DATABASE_URL);
 	return new Promise((resolve, reject) => {
 		mongoose.connect(databaseUrl, err => {
 			if (err) {
