@@ -27,13 +27,11 @@ app.get('/api/*', (req, res) => {
 	res.json({ok: true}); // change to send to client root url?
 });
 
-// app.listen(PORT, () => console.log(`Listening on port ${PORT}`));
-
 let server;
 
 function runServer(databaseUrl=DATABASE_URL, port=PORT) {
 	return new Promise((resolve, reject) => {
-		mongoose.connect(databaseUrl, {useMongoClient: true}, err => {
+		mongoose.connect(databaseUrl, err => {
 			if (err) {
 				return reject(err);
 			}
