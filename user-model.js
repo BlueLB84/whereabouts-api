@@ -12,8 +12,8 @@ const userSchema = mongoose.Schema({
 	lastName: {type: String, default: ''},
 	imgSrc: {type: String, default: 'https://picsum.photos/150'},
 	whereabouts: {
-		location: {type: String, default: ''},
-		activity: {type: String, default: ''}
+		location: String,
+		activity: String
 	}
 });
 

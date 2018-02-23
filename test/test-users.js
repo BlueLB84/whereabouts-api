@@ -61,6 +61,20 @@ describe('Users API resource', function() {
 
 	//  /api/users/:id GET
 	describe('users GET endpoint', function() {
+		it('should return all existing users', function() {
+			let res;
+			return chai.request(app)
+				.get('/api/users')
+				.then(function(_res) {
+					res = _res;
+					res.should.have.status(200);
+					res.body.users.should.have.length.of.at.least(1);
+					return User.count();
+				})
+				.then(function(count) {
+					res.body.users.should.have.lengthOf(count);
+				});
+			});
 
 		it('should return 200 status on user id GET', function() {
 			let user;
@@ -105,6 +119,7 @@ describe('Users API resource', function() {
 				.post('/api/users')
 				.send(newUser)
 				.then(function(res) {
+					console.info(res.body);
 					res.should.have.status(201);
 					res.should.be.json;
 					res.body.should.be.a('object');
@@ -115,7 +130,8 @@ describe('Users API resource', function() {
 					res.body.firstName.should.equal(newUser.firstName);
 					res.body.lastName.should.equal(newUser.lastName);
 					res.body.imgSrc.should.equal(newUser.imgSrc);
-					res.body.whereabouts.should.equal(newUser.whereabouts);
+					// res.body.whereabouts.location.should.equal(newUser.whereabouts.location);
+					// res.body.whereabouts.activity.should.equal(newUser.whereabouts.activity);
 					return User.findById(res.body.userId);
 				})
 				.then(function(user) {
@@ -123,7 +139,7 @@ describe('Users API resource', function() {
 					user.firstName.should.equal(newUser.firstName);
 					user.lastName.should.equal(newUser.lastName);
 					user.imgSrc.should.equal(newUser.imgSrc);
-					user.whereabouts.should.equal(newUser.whereabouts);
+					// user.whereabouts.should.equal(newUser.whereabouts);
 				});
 		});
 	});

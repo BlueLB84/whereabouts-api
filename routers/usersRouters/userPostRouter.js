@@ -4,7 +4,7 @@ mongoose.Promise = global.Promise;
 
 const { User } = require('../../user-model');
 module.exports = function(req, res) {
-	const requiredFields = ['usrrname'];
+	const requiredFields = ['usrname'];
 	const missingField = requiredFields.find(field => !(field in req.body));
 
 	if (missingField) {
@@ -63,7 +63,7 @@ module.exports = function(req, res) {
 		});
 	}
 
-	let {usrname, firstName = '', lastName = '', imgSrc = ''} = req.body;
+	let {usrname, firstName = '', lastName = '', imgSrc = '', whereabouts} = req.body;
 
 	firstName = firstName.trim();
 	lastName = lastName.trim();
@@ -83,11 +83,13 @@ module.exports = function(req, res) {
 			return User;
 		})
 		.then(User => {
+			console.log(req.body);
 			return User.create({
 				usrname,
 				firstName,
 				lastName,
-				imgSrc
+				imgSrc,
+				whereabouts
 			});
 		})
 		.then(user => {
