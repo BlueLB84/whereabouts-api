@@ -129,8 +129,7 @@ describe('Users API resource', function() {
 					res.body.firstName.should.equal(newUser.firstName);
 					res.body.lastName.should.equal(newUser.lastName);
 					res.body.imgSrc.should.equal(newUser.imgSrc);
-					// res.body.whereabouts.location.should.equal(newUser.whereabouts.location);
-					// res.body.whereabouts.activity.should.equal(newUser.whereabouts.activity);
+					expect(res.body.whereabouts).to.deep.equal(newUser.whereabouts);
 					return User.findById(res.body.userId);
 				})
 				.then(function(user) {
@@ -138,7 +137,7 @@ describe('Users API resource', function() {
 					user.firstName.should.equal(newUser.firstName);
 					user.lastName.should.equal(newUser.lastName);
 					user.imgSrc.should.equal(newUser.imgSrc);
-					// user.whereabouts.should.equal(newUser.whereabouts);
+					expect(user.whereabouts.toObject()).to.deep.equal(newUser.whereabouts);
 				});
 		});
 	});

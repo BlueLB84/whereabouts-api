@@ -28,10 +28,19 @@ module.exports = function(req, res) {
 		}
 	})
 	
-	
-	Team
-		.findByIdAndUpdate(req.params.teamid, {$set: toUpdate, $push: {Teams: req.body.teamId}})
+	if (toUpdate.bulletins) {
+		Team.findByIdAndUpdate(req.params.teamid, { $addToSet: { bulletins: toUpdate.bulletins } })
 		.then(team => res.status(204).end())
 		.catch(err => res.status(500).json({message: 'Internal server error'}));
+	} else if (toUpdate.users) {
+		Team.findByIdAndUpdate(req.params.teamid, { $addToSet: { users: toUpdate.users } })
+		.then(team => res.status(204).end())
+		.catch(err => res.status(500).json({message: 'Internal server error'}));
+	} else {
+		Team
+		.findByIdAndUpdate(req.params.teamid, toUpdate)
+		.then(team => res.status(204).end())
+		.catch(err => res.status(500).json({message: 'Internal server error'}));
+	}	
 };
 

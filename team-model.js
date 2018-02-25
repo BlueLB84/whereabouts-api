@@ -6,6 +6,8 @@ const teamSchema = mongoose.Schema({
 	imgSrc: {type: String, default: 'https://picsum.photos/150'},	
 	bulletins: [
 		{
+			id: false,
+			_id: false,
 			userId: {type: String},
 			text: {type: String}
 		}

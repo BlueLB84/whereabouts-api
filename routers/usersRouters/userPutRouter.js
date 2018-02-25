@@ -28,7 +28,6 @@ module.exports = function(req, res) {
 		}
 	});
 	
-	console.log(typeof(toUpdate));
 	User
 		.findByIdAndUpdate(req.params.userid, toUpdate)
 		.then(user => res.status(204).end())

@@ -5,6 +5,7 @@ const mongoose = require('mongoose');
 
 const should = chai.should();
 const expect = chai.expect;
+chai.use(require('chai-things'));
 
 const { Team } = require('../team-model');
 const { app, runServer, closeServer } = require('../server');
@@ -13,7 +14,7 @@ const { TEST_DATABASE_URL } = require('../config');
 chai.use(chaiHttp);
 
 function seedTeamData() {
-	console.info('seeding user data');
+	console.info('seeding team data');
 	const seedData = [];
 
 	for(let i=1; i<=5; i++) {
@@ -24,16 +25,20 @@ function seedTeamData() {
 
 function generateTeamData() {
 
-	// return {
-	// 	usrname: faker.lorem.word(),
-	// 	firstName: faker.name.firstName(),
-	// 	lastName: faker.name.lastName(),
-	// 	imgSrc: faker.image.imageUrl(),
-	// 	whereabouts: {
-	// 		location: faker.lorem.sentence(),
-	// 		activity: faker.lorem.sentence()
-	// 	}
-	// }
+	return {
+		name: faker.lorem.word(),
+		motto: faker.lorem.sentence(),
+		imgSrc: faker.image.imageUrl(),
+		bulletins: [{
+			userId: faker.random.number().toString(),
+			text: faker.lorem.sentence()
+		},
+		{
+			userId: faker.random.number().toString(),
+			text: faker.lorem.sentence()
+		}],
+		users: [faker.random.number().toString(),faker.random.number().toString()]
+	}
 }
 
 function tearDownDb() {
@@ -59,135 +64,139 @@ describe('Teams API resource', function() {
 		return closeServer();
 	});
 
-	//  /api/users/:id GET
-	describe('users GET endpoint', function() {
-		it('should return all existing users', function() {
+	//  /api/teams/:id GET
+	describe('teams GET endpoint', function() {
+		it('should return all existing teams', function() {
 			let res;
 			return chai.request(app)
-				.get('/api/users')
+				.get('/api/teams')
 				.then(function(_res) {
 					res = _res;
 					res.should.have.status(200);
-					res.body.users.should.have.length.of.at.least(1);
-					return User.count();
+					res.body.teams.should.have.length.of.at.least(1);
+					return Team.count();
 				})
 				.then(function(count) {
-					res.body.users.should.have.lengthOf(count);
+					res.body.teams.should.have.lengthOf(count);
 				});
 			});
 
-		it('should return 200 status on user id GET', function() {
-			let user;
+		it('should return 200 status on team id GET', function() {
+			let team;
 			
-			return User
+			return Team
 				.findOne()
-				.then(function(_user) {
-					user = _user;
-					return chai.request(app).get(`/api/users/${user.id}`);
+				.then(function(_team) {
+					team = _team;
+					return chai.request(app).get(`/api/teams/${team.id}`);
 				})
 				.then(function(res) {
 					res.should.have.status(200);
 				});
 		});
 
-		it('should return user with right fields', function() {
-			let resUser;
+		it('should return team with right fields', function() {
+			let resTeam;
 			
-			return User
+			return Team
 				.findOne()
-				.then(function(_resUser) {
-					resUser = _resUser;
-					return chai.request(app).get(`/api/users/${resUser.id}`);
+				.then(function(_resTeam) {
+					resTeam = _resTeam;
+					return chai.request(app).get(`/api/teams/${resTeam.id}`);
 				})
 				.then(function(res) {
 					res.should.be.json;
 					res.body.should.be.a('object');
 
 					res.body.should.include.keys(
-						'userId', 'usrname', 'firstName', 'lastName', 'imgSrc', 'whereabouts');
+						'teamId', 'name', 'motto', 'imgSrc', 'bulletins', 'users');
 				});	
 		});
 	});
 
-	//  /api/users POST
-	describe('users POST endpoint', function() {
+	//  /api/teams POST
+	describe('teams POST endpoint', function() {
 		
-		it('should add a new user', function() {
+		it('should add a new team', function() {
 			const newTeam = generateTeamData();
 
 			return chai.request(app)
-				.post('/api/users')
+				.post('/api/teams')
 				.send(newTeam)
 				.then(function(res) {
 					res.should.have.status(201);
 					res.should.be.json;
 					res.body.should.be.a('object');
 					res.body.should.include.keys(
-						'userId', 'usrname', 'firstName', 'lastName', 'imgSrc', 'whereabouts');
-					res.body.userId.should.not.be.null;
-					res.body.usrname.should.equal(newTeam.usrname);
-					res.body.firstName.should.equal(newTeam.firstName);
-					res.body.lastName.should.equal(newTeam.lastName);
+						'teamId', 'name', 'motto', 'imgSrc', 'bulletins', 'users');
+					res.body.teamId.should.not.be.null;
+					res.body.name.should.equal(newTeam.name);
+					res.body.motto.should.equal(newTeam.motto);
 					res.body.imgSrc.should.equal(newTeam.imgSrc);
-					return User.findById(res.body.userId);
+					expect(res.body.bulletins).to.be.a('array');
+					expect(res.body.users).to.deep.equal(newTeam.users);
+					res.body.users.should.have.length.of.at.least(1);
+					return Team.findById(res.body.teamId);
 				})
-				.then(function(user) {
-					user.usrname.should.equal(newTeam.usrname);
-					user.firstName.should.equal(newTeam.firstName);
-					user.lastName.should.equal(newTeam.lastName);
-					user.imgSrc.should.equal(newTeam.imgSrc);
+				.then(function(team) {
+					team.name.should.equal(newTeam.name);
+					team.motto.should.equal(newTeam.motto);
+					team.imgSrc.should.equal(newTeam.imgSrc);
+					expect(team.bulletins).to.be.a('array');
+					expect(team.users).to.deep.equal(newTeam.users);
 				});
 		});
 	});
 
-	//  /api/users PUT
-	describe('users PUT input', function() {
+	//  /api/teams PUT
+	describe('teams PUT input', function() {
 
 		it('should update field sent over', function() {
 			const updateData = {
-				whereabouts: {
-					location: 'A desk. In a building.',
-					activity: 'Testing this super awesome app.'
+				bulletins: {
+					text: 'Testing this super awesome app with a new bulletin.'
 				}
 			};
 
-		return User
+		return Team
 			.findOne()
-			.then(function(user) {
-				updateData.userId = user.id;
-				updateData.usrname = user.usrname;
+			.then(function(team) {
+				console.log(team);
+				updateData.teamId = team.id;
+				updateData.name = team.name;
+				updateData.bulletins.userId = team.users[0];
 				return chai.request(app)
-					.put(`/api/users/${user.id}`)
+					.put(`/api/teams/${team.id}`)
 					.send(updateData);
 			})
 			.then(function(res) {
 				res.should.have.status(204);
-				return User.findById(updateData.userId);
+				return Team.findById(updateData.teamId);
 			})
-			.then(function(user) {
-				expect(user.whereabouts.toObject()).to.deep.equal(updateData.whereabouts);
+			.then(function(team) {
+				expect(team.bulletins.toObject()).to.include.something.that.deep.equals(updateData.bulletins);
 			});
 		});
 	});
 
-	//  /api/users DELETE
-	describe('users DELETE endpoint', function() {
+	//  /api/teams DELETE
+	describe('teams DELETE endpoint', function() {
 
-		it('should delete a user by id', function() {
-			let user;
+		it('should delete a team by id', function() {
+			let team;
 
-			return User
+			return Team
 				.findOne()
-				.then(function(_user) {
-					user = _user;
-					return chai.request(app).delete(`/api/users/${user.id}`);
+				.then(function(_team) {
+					team = _team;
+					return chai.request(app).delete(`/api/teams/${team.id}`);
 				})
 				.then(function(res) {
 					res.should.have.status(204);
-					return User.findById(user.id);
+					return Team.findById(team.id);
 				})
-				.then(function(_user) {
-					should.not.exist(_user);
+				.then(function(_team) {
+					should.not.exist(_team);
 				});
 		});
 	});

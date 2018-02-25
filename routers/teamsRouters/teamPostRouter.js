@@ -18,6 +18,8 @@ module.exports = function(req, res) {
 			name: req.body.name,
 			motto: req.body.motto,
 			imgSrc: req.body.imgSrc,
+			bulletins: req.body.bulletins,
+			users: req.body.users
 		})
 		.then(
 			team => res.status(201).json(team.teamApiRep()))

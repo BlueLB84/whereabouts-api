@@ -19,6 +19,7 @@
   "homepage": "https://github.com/BlueLB84/whereabouts-api#readme",
   "dependencies": {
     "body-parser": "^1.18.2",
+    "chai-things": "^0.2.0",
     "cors": "^2.8.4",
     "dotenv": "^5.0.0",
     "express": "^4.16.2",
