@@ -29,6 +29,7 @@ function generateUserData() {
 		firstName: faker.name.firstName(),
 		lastName: faker.name.lastName(),
 		imgSrc: faker.image.imageUrl(),
+		email: faker.internet.email(),
 		whereabouts: {
 			location: faker.lorem.sentence(),
 			activity: faker.lorem.sentence()
