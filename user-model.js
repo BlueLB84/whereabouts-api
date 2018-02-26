@@ -10,6 +10,7 @@ const userSchema = mongoose.Schema({
 	},
 	firstName: {type: String, default: ''},
 	lastName: {type: String, default: ''},
+	email: {type: String, default: ''},
 	imgSrc: {type: String, default: 'https://picsum.photos/150'},
 	whereabouts: {
 		location: String,
@@ -23,6 +24,7 @@ userSchema.methods.userApiRep = function() {
 		usrname: this.usrname,
 		firstName: this.firstName,
 		lastName: this.lastName,
+		email: this.email,
 		imgSrc: this.imgSrc,
 		whereabouts: this.whereabouts
 	};

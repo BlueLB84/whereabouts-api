@@ -20,7 +20,7 @@ module.exports = function(req, res) {
 
 	console.log(`Updating user with user ID: ${req.params.userid}`);
 	const toUpdate = {};
-	const updateableFields = ['imgSrc', 'whereabouts'];
+	const updateableFields = ['imgSrc', 'whereabouts', 'email'];
 
 	updateableFields.forEach(field => {
 		if (field in req.body) {

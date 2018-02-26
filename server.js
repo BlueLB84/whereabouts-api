@@ -25,7 +25,7 @@ app.use('/api/users', usersRouter);
 app.use('/api/teams', teamsRouter);
 
 app.get('/api/*', (req, res) => {
-	res.json({ok: true}); // change to send to client root url?
+	res.json({ok: true});
 });
 
 let server;

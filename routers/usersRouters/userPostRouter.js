@@ -4,7 +4,7 @@ mongoose.Promise = global.Promise;
 
 const { User } = require('../../user-model');
 module.exports = function(req, res) {
-	const requiredFields = ['usrname'];
+	const requiredFields = ['usrname', 'email'];
 	const missingField = requiredFields.find(field => !(field in req.body));
 
 	if (missingField) {
@@ -16,7 +16,7 @@ module.exports = function(req, res) {
 		});
 	}
 
-	const stringFields = ['usrname', 'firstName', 'lastName', 'imgSrc'];
+	const stringFields = ['usrname', 'firstName', 'lastName', 'imgSrc', 'email'];
 	const nonStringField = stringFields.find(field => field in req.body && typeof req.body[field] !== 'string');
 
 	if (nonStringField) {
@@ -63,11 +63,12 @@ module.exports = function(req, res) {
 		});
 	}
 
-	let {usrname, firstName = '', lastName = '', imgSrc = '', whereabouts} = req.body;
+	let {usrname, firstName = '', lastName = '', imgSrc = '', whereabouts, email} = req.body;
 
 	firstName = firstName.trim();
 	lastName = lastName.trim();
 	imgSrc = imgSrc.trim();
+	email = email.trim();
 
 	return User.find({usrname})
 		.count()
@@ -88,6 +89,7 @@ module.exports = function(req, res) {
 				usrname,
 				firstName,
 				lastName,
+				email,
 				imgSrc,
 				whereabouts
 			});
