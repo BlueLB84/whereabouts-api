@@ -5,9 +5,9 @@ mongoose.Promise = global.Promise;
 const { User } = require('../../user-model');
 
 module.exports = function(req, res) {
-	const requiredField = 'usrname';
-	if (!('usrname' in req.body)) {
-		const message = `Missing username in request body`;
+	const requiredField = 'userId';
+	if (!('userId' in req.body)) {
+		const message = `Missing user ID in request body`;
 		console.error(message);
 		return res.status(400).send(message);
 	}
@@ -30,7 +30,8 @@ module.exports = function(req, res) {
 	
 	User
 		.findByIdAndUpdate(req.params.userid, toUpdate)
-		.then(user => res.status(204).end())
+		.then(user => User.findById(req.params.userid))
+		.then(user => res.status(202).json(user.userApiRep()))
 		.catch(err => res.status(500).json({message: 'Internal server error'}));
 };
 
