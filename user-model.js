@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
 
 const userSchema = mongoose.Schema({
+	userUID: {type: String, default: ''},
 	usrname: {
 		type: String,
 		required: true,
@@ -21,6 +22,7 @@ const userSchema = mongoose.Schema({
 userSchema.methods.userApiRep = function() {
 	return {
 		userId: this._id,
+		userUID: this.userUID,
 		usrname: this.usrname,
 		firstName: this.firstName,
 		lastName: this.lastName,
