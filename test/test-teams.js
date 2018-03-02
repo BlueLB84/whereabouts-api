@@ -170,7 +170,7 @@ describe('Teams API resource', function() {
 					.send(updateData);
 			})
 			.then(function(res) {
-				res.should.have.status(204);
+				res.should.have.status(202);
 				return Team.findById(updateData.teamId);
 			})
 			.then(function(team) {

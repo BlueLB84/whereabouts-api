@@ -164,7 +164,7 @@ describe('Users API resource', function() {
 					.send(updateData);
 			})
 			.then(function(res) {
-				res.should.have.status(204);
+				res.should.have.status(202);
 				return User.findById(updateData.userId);
 			})
 			.then(function(user) {
