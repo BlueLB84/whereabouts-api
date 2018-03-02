@@ -8,6 +8,7 @@ const cors = require('cors');
 const { DATABASE_URL, CLIENT_ORIGIN, PORT,  } = require('./config');
 const app = express();
 
+const authRouter = require('./routers/authRouter');
 const usersRouter = require('./routers/usersRouter');
 const teamsRouter = require('./routers/teamsRouter');
 
@@ -21,6 +22,7 @@ app.use(
 );
 
 // Routers
+app.use('/api/login', authRouter);
 app.use('/api/users', usersRouter);
 app.use('/api/teams', teamsRouter);
 
