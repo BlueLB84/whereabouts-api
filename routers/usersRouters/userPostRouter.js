@@ -63,7 +63,7 @@ module.exports = function(req, res) {
 		});
 	}
 
-	let {usrname, firstName = '', lastName = '', imgSrc = '', whereabouts, email} = req.body;
+	let {usrname, firstName = '', lastName = '', imgSrc = '', whereabouts, email, userUID} = req.body;
 
 	firstName = firstName.trim();
 	lastName = lastName.trim();
@@ -86,6 +86,7 @@ module.exports = function(req, res) {
 		.then(User => {
 			console.log(req.body);
 			return User.create({
+				userUID,
 				usrname,
 				firstName,
 				lastName,
