@@ -6,7 +6,7 @@ const mongoose = require('mongoose');
 const passport = require('passport');
 
 const cors = require('cors');
-const { DATABASE_URL, CLIENT_ORIGIN, PORT,  } = require('./config');
+const {DATABASE_URL, PORT} = require('./config');
 const app = express();
 
 const { router: authRouter, localStrategy, jwtStrategy } = require('./auth');
@@ -16,11 +16,16 @@ const teamsRouter = require('./routers/teamsRouter');
 mongoose.Promise = global.Promise;
 
 app.use(morgan('common'));
-app.use(
-	cors({
-		origin: CLIENT_ORIGIN
-	})
-);
+// CORS
+app.use(function (req, res, next) {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Headers', 'Content-Type,Authorization');
+  res.header('Access-Control-Allow-Methods', 'GET,POST,PUT,PATCH,DELETE');
+  if (req.method === 'OPTIONS') {
+    return res.send(204);
+  }
+  next();
+});
 
 passport.use(localStrategy);
 passport.use(jwtStrategy);
