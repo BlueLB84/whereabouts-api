@@ -1,14 +1,15 @@
+'use strict';
 require('dotenv').config();
 const express = require('express');
 const morgan = require('morgan');
 const mongoose = require('mongoose');
-const bodyParser = require('body-parser');
-const jsonParser = bodyParser.json();
+const passport = require('passport');
+
 const cors = require('cors');
 const { DATABASE_URL, CLIENT_ORIGIN, PORT,  } = require('./config');
 const app = express();
 
-const authRouter = require('./routers/authRouter');
+const { router: authRouter, localStrategy, jwtStrategy } = require('./auth');
 const usersRouter = require('./routers/usersRouter');
 const teamsRouter = require('./routers/teamsRouter');
 
@@ -21,19 +22,23 @@ app.use(
 	})
 );
 
-// Routers
-app.use('/api/login', authRouter);
-app.use('/api/users', usersRouter);
-app.use('/api/teams', teamsRouter);
+passport.use(localStrategy);
+passport.use(jwtStrategy);
 
-app.get('/api/*', (req, res) => {
-	res.json({ok: true});
+const jwtAuth = passport.authenticate('jwt', { session: false });
+
+// Routers
+app.use('/api/auth', authRouter);
+app.use('/api/users', jwtauth, usersRouter);
+app.use('/api/teams', jwtauth, teamsRouter);
+
+app.use('*', (req, res) => {
+  return res.status(404).json({ message: 'Not Found' });
 });
 
 let server;
 
 function runServer(databaseUrl=DATABASE_URL, port=PORT) {
-	console.log(DATABASE_URL);
 	return new Promise((resolve, reject) => {
 		mongoose.connect(databaseUrl, err => {
 			if (err) {
@@ -66,7 +71,7 @@ function closeServer() {
 }
 
 if (require.main === module) {
-	runServer().catch(err => console.error(err));
+	runServer(DATABASE_URL).catch(err => console.error(err));
 };
 
 module.exports = {app, runServer, closeServer};
